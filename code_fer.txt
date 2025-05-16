@@ -1,0 +1,43 @@
+#import open cv  library
+import cv2
+
+!pip install fer
+# import FER function from fer library
+from fer import FER
+
+# matplotlib.pyplot is a collection of command style functions that make matplotlib work like MATLAB
+import matplotlib.pyplot as plt
+# Path to input image
+imgloc = '/content/a_pic.jpg'
+# Reading the image from location and store in variable 'input_image' by using 'imread' function
+input_image = '/content/a_pic.jpg'
+# To use advanced MTCNN(Multi-task Cascaded Convolutional Networks) just pass `mtcnn=True` in FER
+emo_detector = FER(mtcnn=True)
+
+# Capture all the emotions on the image
+captured_emotions = emo_detector.detect_emotions(input_image)
+# Print input image's emotions information after detection of emotion
+print(captured_emotions)
+# [{'box': [223, 215, 437, 556], 'emotions': {'angry': 0.0, 'disgust': 0.0, 'fear': 0.0, 'happy': 0.12, 'sad': 0.0, 'surprise': 0.0, 'neutral': 0.88}}]
+
+#import open cv library
+import cv2
+# Making bounding box around face by using  cv2.rectangle function to draw a green rectangle around face
+bounding_box = captured_emotions[0]["box"]
+emotions = captured_emotions[0]["emotions"]
+# Read the image file into a NumPy array
+input_image_array = cv2.imread('/content/a_pic.jpg') # Assuming input_image is still the path string
+# Now use the image array to draw the rectangle
+cv2.rectangle(input_image_array, (bounding_box[0], bounding_box[1]), (bounding_box[0] + bounding_box[2], bounding_box[1] + bounding_box[3]), (0, 255, 0), 2)
+
+input_image_array_with_rectangle = cv2.imread('/content/a_pic.jpg') # Assuming input_image is still the path string
+
+input_image_array_with_rectangle = cv2.imread('/content/a_pic.jpg') # Assuming input_image is still the path string
+
+emotion_name, score = emo_detector.top_emotion(input_image_array_with_rectangle)
+
+if score == np.max(list(emotions.values())):
+  emotion = "{}".format(emotion_name)
+  print("detected_emotion:", emotion_name)
+
+cv2.putText(input_image_array_with_rectangle, emotion, (bounding_box[0], bounding_box[1] + bounding_box[3] + 30), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 4, cv2.LINE_AA)
